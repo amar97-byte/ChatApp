@@ -4,6 +4,7 @@ import cors from "cors";
 import http from "http";
 import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/user.route.js";
+import messageRouter from "./routes/message.route.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/status", (req, res) => {
 });
 
 app.use("/api/auth" , userRouter)
+app.use("/api/messages" , messageRouter)
 
 
 //----- Connect to mongodb----
