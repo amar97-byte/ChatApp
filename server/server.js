@@ -3,19 +3,26 @@ import "dotenv/config";
 import cors from "cors";
 import http from "http";
 import { connectDB } from "./lib/db.js";
+import userRouter from "./routes/user.route.js";
 
 const app = express();
 
 // ---- Socket.io support the http server---
 const server = http.createServer(app);
 
+
 // Middleware
 app.use(express.json({ limit: "4mb" }));
 app.use(cors());
 
+
+// ------ Route setup ------
 app.use("/api/status", (req, res) => {
   res.send("Server is live");
 });
+
+app.use("/api/auth" , userRouter)
+
 
 //----- Connect to mongodb----
 await connectDB()
