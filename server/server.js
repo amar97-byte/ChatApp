@@ -5,11 +5,43 @@ import http from "http";
 import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/user.route.js";
 import messageRouter from "./routes/message.route.js";
+import { Server } from "socket.io";
+import { log } from "console";
 
 const app = express();
 
 // ---- Socket.io support the http server---
 const server = http.createServer(app);
+
+
+// ------- Initialize socket.io server ----
+export const io = new Server ({
+  cors : {origin : "*"}
+})
+
+// -------- Store online users
+export const userSocketMap = {}  // { userid : socketId}
+
+// ------ Socket.io  connection handler -----
+io.on("connection" , (socket)=> {
+  const userId = socket.handshake.query.userId
+  console.log("User Connected" , userId);
+
+  if(userId) userSocketMap[userId] = socket.id
+  
+  // Emmit online users to all connected clients
+  io.emit("getOnlineUsers" , Object.keys(userSocketMap))
+
+  socket.on("disconnect" ,()=> {
+    console.log("User Disconnected" , userId);
+
+    delete userSocketMap[userId]
+    io.emit("getOnlineUsers" , Object.keys(userSocketMap))
+    
+  })
+})
+
+
 
 
 // Middleware
