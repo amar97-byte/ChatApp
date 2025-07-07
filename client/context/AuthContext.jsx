@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const { data } = await axios.get("/api/auth/check");
-      console.log(data);
-      
+      // console.log(data);
+            
       if (data.success) {
         setAuthUSer(data.user);
         connectSocket(data.user);
@@ -35,7 +35,9 @@ export const AuthProvider = ({ children }) => {
   // Login function to handle user auntentication and socket connection
   const login = async (state, credentials) => {
     try {
-      const { data } = axios.post(`/api/auth/${state}`, credentials);
+      const { data } = await axios.post(`/api/auth/${state}`, credentials);
+      console.log(data);
+      
       
       
       if (data.success) {
@@ -95,7 +97,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (token) {
+    if (token){
       axios.defaults.headers.common["token"] = token;
     }
     checkAuth();
