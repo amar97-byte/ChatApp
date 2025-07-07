@@ -30,7 +30,7 @@ export const signUp = async (req, res) => {
       bio,
     });
 
-    const token = generateToken(newUser._id);
+     const token = generateToken(newUser._id);
 
     res.json({
       success: true,
